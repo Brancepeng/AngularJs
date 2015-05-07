@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<select id="drinkSelect">
+    <option value="coffee">coffee</option>
+    <option value="milk">milk</option>
+    <option value="juice">juice</option>
+</select>
+<p id="theColorOfDrink"></p>
+<script type="text/javascript">
+    //上面程序会把选中的饮料的颜色显示出来，如果用MVC，就是这个样子：
+    //showDrinkColor is Controller
+    var showDrinkColor = {
+        start:function(){
+            this.view.start();
+        },
+        set:function(drinkName){
+            this.model.setDrink(drinkName);
+        }
+    };
+    //Model
+    showDrinkColor.model = {
+        colorOfDrink:{
+            "coffee":"brown",
+            "milk":"white",
+            "juice":"orange"
+        },
+        selectedDrink:null,
+        setDrink:function(drinkName){
+            console.log(drinkName);
+            this.selectedDrink = this.colorOfDrink[this.selectedDrink]?drinkName:null;
+            console.log(drinkName);
+            this.onchange();
+        },
+        onchange:function(){
+            showDrinkColor.view.update();
+        },
+        getDrinkColor:function(){
+            return this.selectedDrink?this.colorOfDrink[this.selectedDrink]:"white";
+        }
+    };
+    //View
+    showDrinkColor.view = {
+        start:function(){
+            document.getElementById("drinkSelect").onchange = this.onchange;
+        },
+        onchange:function(){
+            showDrinkColor.set(document.getElementById("drinkSelect").value);
+            console.log(showDrinkColor.value);
+        },
+        update:function(){
+            document.getElementById("theColorOfDrink").innerHTML = showDrinkColor.model.getDrinkColor();
+        }
+    };
+    showDrinkColor.start();
+    //进行分层之后，各个层次的功能清晰：V层控制界面显示，将界面与数据连接；M层存放数据，处理逻辑，C层用于连接M和V，
+    // 但是，代码变复杂了。
+    // 的确，层次越多，需要做的工作也越多，这里需要处理各层的通信。所以，具体怎么设计，还是要分析场景，因地制宜。
+</script>
+</body>
+</html>
